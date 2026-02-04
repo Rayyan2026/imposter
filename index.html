@@ -10,14 +10,17 @@
             --text: #e6edf3; --dim: #8b949e; --border: #21262d; 
             --card-default: #161b22;
         }
-        /* BLUE BOX & TAP REMOVAL */
+        /* UNIVERSAL BLUE REMOVAL */
         * { box-sizing: border-box; outline: none !important; -webkit-tap-highlight-color: transparent !important; user-select: none; }
         
-        /* DARK SCROLLBAR - FORCED COLORS */
+        /* FORCED DARK SCROLLBAR */
+        .player-list { 
+            scrollbar-width: thin; 
+            scrollbar-color: #30363d #0d1117; 
+        }
         .player-list::-webkit-scrollbar { width: 6px !important; }
         .player-list::-webkit-scrollbar-track { background: #0d1117 !important; border-radius: 10px; }
         .player-list::-webkit-scrollbar-thumb { background: #30363d !important; border-radius: 10px; border: 1px solid #0d1117; }
-        .player-list { scrollbar-width: thin; scrollbar-color: #30363d #0d1117; }
 
         body { 
             font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); 
@@ -25,6 +28,7 @@
             touch-action: manipulation;
         }
 
+        /* CUSTOM ALERT */
         #customAlert {
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
             background: var(--danger); color: white; padding: 14px 24px; border-radius: 14px;
@@ -164,8 +168,8 @@
                 document.getElementById('smartClue').innerText = clue.toUpperCase();
                 document.getElementById('imposterHint').classList.remove('hidden');
             } else { box.innerText = secret; }
-            // THE TIMER IS NOW EXACTLY 500MS
-            holdTimer = setTimeout(() => { document.getElementById('doneWrapper').classList.add('unlocked'); }, 500);
+            // TIMER SET TO 250ms (0.25s)
+            holdTimer = setTimeout(() => { document.getElementById('doneWrapper').classList.add('unlocked'); }, 250);
         };
 
         const endHold = () => {
