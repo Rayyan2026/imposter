@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Imposter</title>
     <style>
         :root { 
             --bg: #0b0e14; --surface: #161b22; --accent: #238636; --danger: #f85149; 
-            --text: #e6edf3; --dim: #8b949e; --border: #30363d;
+            --text: #e6edf3; --dim: #8b949e; --border: #30363d; --hover-bg: #2d333b;
+        }
+
+        /* REMOVE BLUE HIGHLIGHTS & OUTLINES GLOBALLY */
+        * { 
+            box-sizing: border-box;
+            outline: none !important; /* Removes blue box on PC */
+            -webkit-tap-highlight-color: transparent; /* Removes blue tap on mobile */
+            scrollbar-width: thin; 
+            scrollbar-color: #30363d #0d1117;
         }
 
         /* CUSTOM SCROLLBAR */
-        * { scrollbar-width: thin; scrollbar-color: #30363d #0d1117; -webkit-tap-highlight-color: transparent; outline: none !important; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0d1117; }
         ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
@@ -33,12 +40,15 @@
 
         h1 { color: var(--accent); margin: 0 0 1rem 0; font-size: 2.5rem; letter-spacing: -1.5px; }
 
-        /* INPUT BAR */
-        .input-row { position: relative; display: flex; gap: 8px; margin-bottom: 12px; }
+        /* INPUT ROW WITH GREY FOCUS */
+        .input-row { display: flex; gap: 8px; margin-bottom: 12px; }
         input { 
-            flex: 1; padding: 14px 50px 14px 14px; border-radius: 12px; border: 1px solid var(--border); 
+            flex: 1; padding: 14px 50px 14px 14px; border-radius: 14px; border: 1px solid var(--border); 
             background: #0d1117; color: white; font-size: 16px; width: 100%;
+            transition: background 0.2s, border 0.2s;
         }
+        input:focus { border-color: var(--dim); background: var(--hover-bg); }
+
         .add-btn {
             position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
             width: 38px; height: 38px; background: var(--accent); border-radius: 50%;
@@ -49,19 +59,44 @@
             border-right: 3px solid white; transform: rotate(45deg); margin-right: 2px;
         }
 
-        .player-list { max-height: 140px; overflow-y: auto; margin-bottom: 15px; border-radius: 10px; text-align: left; }
-        .player-badge { background: #21262d; padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; margin-bottom: 6px; border: 1px solid var(--border); }
+        .player-list { max-height: 140px; overflow-y: auto; margin-bottom: 15px; border-radius: 12px; text-align: left; }
+        .player-badge { 
+            background: #21262d; padding: 10px 14px; border-radius: 14px; display: flex; 
+            justify-content: space-between; margin-bottom: 6px; border: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+        .player-badge:hover { background: var(--hover-bg); }
 
+        /* SELECT ITEMS WITH ROUNDED EDGES & GREY HOVER */
         .setting-item { text-align: left; margin-bottom: 12px; }
         .setting-item label { display: block; font-size: 0.7rem; color: var(--dim); margin-bottom: 4px; font-weight: bold; text-transform: uppercase; }
-        select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: #0d1117; color: white; font-size: 16px; cursor: pointer; -webkit-appearance: none; appearance: none; }
+        select { 
+            width: 100%; padding: 12px; border-radius: 14px; border: 1px solid var(--border); 
+            background: #0d1117; color: white; font-size: 16px; cursor: pointer; 
+            appearance: none; -webkit-appearance: none; 
+            transition: background 0.2s;
+        }
+        select:hover, select:focus { background: var(--hover-bg); }
 
-        /* GAMEPLAY */
-        .hold-btn { width: 100%; height: 140px; border-radius: 20px; border: none; background: linear-gradient(145deg, #2ea043, #238636); color: white; font-size: 1.3rem; font-weight: 900; margin: 15px 0; cursor: pointer; touch-action: none; }
-        .secret-box { height: 90px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 900; background: rgba(0,0,0,0.4); border-radius: 18px; border: 2px dashed var(--border); margin-bottom: 15px; text-transform: uppercase; }
-        .hint-box { background: rgba(248, 81, 73, 0.12); border: 1px solid var(--danger); padding: 14px; border-radius: 14px; text-align: left; font-size: 0.85rem; color: #ffa198; margin-bottom: 15px; }
+        /* GAMEPLAY BUTTONS */
+        .hold-btn { 
+            width: 100%; height: 140px; border-radius: 24px; border: none; 
+            background: linear-gradient(145deg, #2ea043, #238636); color: white; 
+            font-size: 1.3rem; font-weight: 900; margin: 15px 0; cursor: pointer; 
+            touch-action: none; transition: transform 0.1s;
+        }
+        .hold-btn:active { transform: scale(0.97); }
 
-        .action-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: #30363d; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; }
+        .secret-box { height: 90px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 900; background: rgba(0,0,0,0.4); border-radius: 22px; border: 2px dashed var(--border); margin-bottom: 15px; text-transform: uppercase; }
+        .hint-box { background: rgba(248, 81, 73, 0.12); border: 1px solid var(--danger); padding: 14px; border-radius: 18px; text-align: left; font-size: 0.85rem; color: #ffa198; margin-bottom: 15px; }
+
+        .action-btn { 
+            width: 100%; padding: 16px; border-radius: 14px; border: none; 
+            background: #30363d; color: white; font-weight: 700; font-size: 1rem; 
+            cursor: pointer; transition: background 0.2s;
+        }
+        .action-btn:hover { background: var(--hover-bg); }
+        
         .hidden { display: none; }
         .imposter-text { color: var(--danger); border-color: var(--danger); }
     </style>
@@ -70,7 +105,7 @@
     <div class="app-card">
         <div id="setup">
             <h1>Imposter</h1>
-            <div class="input-row">
+            <div class="input-row" style="position: relative;">
                 <input type="text" id="nameInput" placeholder="Add Player Name" enterkeyhint="done">
                 <button class="add-btn" onclick="addPlayer()"></button>
             </div>
