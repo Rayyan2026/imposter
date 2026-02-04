@@ -10,102 +10,63 @@
             --text: #e6edf3; --dim: #8b949e; --border: #30363d; --hover-bg: #2d333b;
         }
 
-        /* REMOVE BLUE HIGHLIGHTS & OUTLINES GLOBALLY */
+        /* 1. UNIVERSAL BLUE REMOVAL */
         * { 
-            box-sizing: border-box;
-            outline: none !important; /* Removes blue box on PC */
-            -webkit-tap-highlight-color: transparent; /* Removes blue tap on mobile */
-            scrollbar-width: thin; 
-            scrollbar-color: #30363d #0d1117;
+            box-sizing: border-box; outline: none !important; -webkit-tap-highlight-color: transparent !important; 
+            -webkit-user-select: none; user-select: none; scrollbar-width: thin; scrollbar-color: #30363d #0d1117;
         }
 
-        /* CUSTOM SCROLLBAR */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0d1117; }
         ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
 
         body { 
-            font-family: -apple-system, system-ui, sans-serif; 
-            background: var(--bg); color: var(--text); 
-            margin: 0; display: flex; align-items: center; justify-content: center; 
-            min-height: 100dvh; user-select: none; -webkit-user-select: none;
-            touch-action: manipulation;
+            font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); 
+            margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100dvh; 
+            touch-action: manipulation; transition: background 0.5s ease;
         }
 
         .app-card { 
-            background: var(--surface); width: 90%; max-width: 400px; 
-            padding: 1.5rem; border-radius: 28px; border: 1px solid var(--border); 
-            text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            background: var(--surface); width: 90%; max-width: 400px; padding: 1.5rem; 
+            border-radius: 28px; border: 1px solid var(--border); text-align: center; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); transition: border-color 0.5s ease;
         }
 
         h1 { color: var(--accent); margin: 0 0 1rem 0; font-size: 2.5rem; letter-spacing: -1.5px; }
 
-        /* INPUT ROW WITH GREY FOCUS */
-        .input-row { display: flex; gap: 8px; margin-bottom: 12px; }
-        input { 
-            flex: 1; padding: 14px 50px 14px 14px; border-radius: 14px; border: 1px solid var(--border); 
-            background: #0d1117; color: white; font-size: 16px; width: 100%;
-            transition: background 0.2s, border 0.2s;
-        }
+        .input-row { position: relative; display: flex; gap: 8px; margin-bottom: 12px; }
+        input { flex: 1; padding: 14px 50px 14px 14px; border-radius: 14px; border: 1px solid var(--border); background: #0d1117; color: white; font-size: 16px; width: 100%; -webkit-user-select: text; user-select: text; }
         input:focus { border-color: var(--dim); background: var(--hover-bg); }
 
-        .add-btn {
-            position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
-            width: 38px; height: 38px; background: var(--accent); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; border: none; cursor: pointer;
-        }
-        .add-btn::after {
-            content: ''; width: 8px; height: 8px; border-top: 3px solid white; 
-            border-right: 3px solid white; transform: rotate(45deg); margin-right: 2px;
-        }
+        .add-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; }
+        .add-btn::after { content: ''; width: 8px; height: 8px; border-top: 3px solid white; border-right: 3px solid white; transform: rotate(45deg); margin-right: 2px; }
 
-        .player-list { max-height: 140px; overflow-y: auto; margin-bottom: 15px; border-radius: 12px; text-align: left; }
-        .player-badge { 
-            background: #21262d; padding: 10px 14px; border-radius: 14px; display: flex; 
-            justify-content: space-between; margin-bottom: 6px; border: 1px solid var(--border);
-            transition: background 0.2s;
-        }
-        .player-badge:hover { background: var(--hover-bg); }
+        .player-list { max-height: 140px; overflow-y: auto; margin-bottom: 15px; border-radius: 14px; text-align: left; }
+        .player-badge { background: #21262d; padding: 10px 14px; border-radius: 14px; display: flex; justify-content: space-between; margin-bottom: 6px; border: 1px solid var(--border); }
 
-        /* SELECT ITEMS WITH ROUNDED EDGES & GREY HOVER */
         .setting-item { text-align: left; margin-bottom: 12px; }
         .setting-item label { display: block; font-size: 0.7rem; color: var(--dim); margin-bottom: 4px; font-weight: bold; text-transform: uppercase; }
-        select { 
-            width: 100%; padding: 12px; border-radius: 14px; border: 1px solid var(--border); 
-            background: #0d1117; color: white; font-size: 16px; cursor: pointer; 
-            appearance: none; -webkit-appearance: none; 
-            transition: background 0.2s;
-        }
-        select:hover, select:focus { background: var(--hover-bg); }
+        select { width: 100%; padding: 12px; border-radius: 14px; border: 1px solid var(--border); background: #0d1117; color: white; font-size: 16px; cursor: pointer; appearance: none; -webkit-appearance: none; }
 
-        /* GAMEPLAY BUTTONS */
-        .hold-btn { 
-            width: 100%; height: 140px; border-radius: 24px; border: none; 
-            background: linear-gradient(145deg, #2ea043, #238636); color: white; 
-            font-size: 1.3rem; font-weight: 900; margin: 15px 0; cursor: pointer; 
-            touch-action: none; transition: transform 0.1s;
-        }
-        .hold-btn:active { transform: scale(0.97); }
+        .hold-btn { width: 100%; height: 140px; border-radius: 28px; border: none; background: linear-gradient(145deg, #2ea043, #238636); color: white; font-size: 1.3rem; font-weight: 900; margin: 15px 0; cursor: pointer; touch-action: none; }
+        .hold-btn:active { opacity: 0.8; }
 
-        .secret-box { height: 90px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 900; background: rgba(0,0,0,0.4); border-radius: 22px; border: 2px dashed var(--border); margin-bottom: 15px; text-transform: uppercase; }
-        .hint-box { background: rgba(248, 81, 73, 0.12); border: 1px solid var(--danger); padding: 14px; border-radius: 18px; text-align: left; font-size: 0.85rem; color: #ffa198; margin-bottom: 15px; }
+        .secret-box { height: 90px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 900; background: rgba(0,0,0,0.4); border-radius: 24px; border: 2px dashed var(--border); margin-bottom: 15px; text-transform: uppercase; }
+        .hint-box { background: rgba(248, 81, 73, 0.12); border: 1px solid var(--danger); padding: 14px; border-radius: 20px; text-align: left; font-size: 0.85rem; color: #ffa198; margin-bottom: 15px; }
 
-        .action-btn { 
-            width: 100%; padding: 16px; border-radius: 14px; border: none; 
-            background: #30363d; color: white; font-weight: 700; font-size: 1rem; 
-            cursor: pointer; transition: background 0.2s;
-        }
-        .action-btn:hover { background: var(--hover-bg); }
+        .action-btn { width: 100%; padding: 16px; border-radius: 14px; border: none; background: #30363d; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: opacity 0.3s, background 0.3s; }
+        .action-btn:disabled { opacity: 0.3; cursor: not-allowed; background: #1a1a1a !important; }
         
         .hidden { display: none; }
-        .imposter-text { color: var(--danger); border-color: var(--danger); }
+        .imposter-text { color: var(--danger) !important; border-color: var(--danger) !important; }
+        .imposter-reveal-name { color: var(--danger); font-weight: bold; display: block; margin: 5px 0; }
     </style>
 </head>
 <body>
-    <div class="app-card">
+    <div id="card" class="app-card">
         <div id="setup">
             <h1>Imposter</h1>
-            <div class="input-row" style="position: relative;">
+            <div class="input-row">
                 <input type="text" id="nameInput" placeholder="Add Player Name" enterkeyhint="done">
                 <button class="add-btn" onclick="addPlayer()"></button>
             </div>
@@ -115,95 +76,118 @@
             <button class="action-btn" onclick="initGame()" style="background:var(--accent);">START GAME</button>
         </div>
 
-        <div id="reveal" class="hidden">
-            <h2 id="playerLabel" style="color:var(--dim); margin-bottom: 5px;">Player</h2>
+        <div id="reveal-role" class="hidden">
+            <h2 id="playerLabel" style="color:var(--text); margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Player</h2>
             <div id="secretContainer" class="secret-box">LOCKED</div>
             <button id="holdBtn" class="hold-btn">HOLD TO REVEAL</button>
             <div id="imposterHint" class="hint-box hidden"><strong style="color:var(--danger)">VAGUE HINT:</strong> <span id="smartClue">---</span></div>
-            <button class="action-btn" onclick="finishReveal()">DONE</button>
+            <button id="doneBtn" class="action-btn" onclick="finishReveal()" disabled>VIEW WORD FIRST</button>
         </div>
 
         <div id="discuss" class="hidden">
             <h1 style="color:var(--danger)">VOTE</h1>
-            <p id="gameSummary" style="color:var(--dim); margin-bottom: 20px;"></p>
-            <button class="action-btn" onclick="location.reload()" style="background:var(--danger)">NEW ROUND</button>
+            <p id="gameSummary" style="color:var(--dim); margin-bottom: 20px;">Discuss and vote.</p>
+            <button class="action-btn" onclick="showResults()">REVEAL TRUTH</button>
+        </div>
+
+        <div id="results" class="hidden">
+            <h1 style="color:var(--accent)">RESULTS</h1>
+            <p style="color:var(--dim);">The secret word was:</p>
+            <div id="finalWord" class="secret-box" style="margin-bottom:10px;">WORD</div>
+            <p style="color:var(--dim);">The Imposter(s) were:</p>
+            <div id="imposterNames"></div>
+            <button class="action-btn" onclick="location.reload()" style="background:var(--danger); margin-top: 20px;">NEW ROUND</button>
         </div>
     </div>
 
     <script>
-        const library = {
-            animals: { "Lion": "Feline", "Shark": "Aquatic", "Elephant": "Mammal", "Eagle": "Avian", "Spider": "Nature" },
-            food: { "Pizza": "Italian", "Apple": "Organic", "Pancake": "Breakfast", "Bacon": "Meat", "Hamburger": "Edible" },
-            movies: { "Star Wars": "Fiction", "Toy Story": "Animation", "Titanic": "History", "Joker": "Drama", "Inception": "Mental" }
-        };
+        const library = { animals: { "Lion": "Feline", "Shark": "Aquatic", "Elephant": "Mammal", "Eagle": "Avian", "Spider": "Nature" }, food: { "Pizza": "Italian", "Apple": "Organic", "Pancake": "Breakfast", "Bacon": "Meat", "Hamburger": "Edible" }, movies: { "Star Wars": "Fiction", "Toy Story": "Animation", "Titanic": "History", "Joker": "Drama", "Inception": "Mental" } };
+        const playerColors = ["#1e3a8a", "#581c87", "#701a75", "#4c1d95", "#1e40af", "#3730a3", "#164e63", "#064e3b", "#78350f", "#450a0a"];
+        
         let players = JSON.parse(localStorage.getItem('gameNames')) || [];
-        let impIndices = [], secret, current = 0;
+        let impIndices = [], secret, current = 0, hasSeen = false;
 
-        function addPlayer() {
-            const input = document.getElementById('nameInput');
-            if (input.value.trim() && players.length < 20) {
-                players.push(input.value.trim());
-                localStorage.setItem('gameNames', JSON.stringify(players));
-                input.value = ''; render();
-            }
-        }
-        function render() {
-            document.getElementById('playerList').innerHTML = players.map((p, i) => `
-                <div class="player-badge"><span>${p}</span><span style="color:var(--danger); font-weight:bold; cursor:pointer;" onclick="removePlayer(${i})">✕</span></div>
-            `).join('');
-        }
-        function removePlayer(i) { players.splice(i, 1); localStorage.setItem('gameNames', JSON.stringify(players)); render(); }
+        function addPlayer() { const input = document.getElementById('nameInput'); if (input.value.trim() && players.length < 20) { players.push(input.value.trim()); localStorage.setItem('gameNames', JSON.stringify(players)); input.value = ''; render(); } }
+        function render() { document.getElementById('playerList').innerHTML = players.map((p, i) => `<div class="player-badge"><span>${p}</span><span style="color:var(--danger); font-weight:bold; cursor:pointer;" onclick="removePlayer(${i})">✕</span></div>`).join(''); }
+        window.removePlayer = (i) => { players.splice(i, 1); localStorage.setItem('gameNames', JSON.stringify(players)); render(); };
+        
         function initGame() {
             const countReq = parseInt(document.getElementById('impCount').value);
-            if (players.length < countReq + 1) return alert(`Add more players!`);
-            impIndices = [];
-            while(impIndices.length < countReq) {
-                let r = Math.floor(Math.random() * players.length);
-                if(!impIndices.includes(r)) impIndices.push(r);
-            }
+            if (players.length < countReq + 1) return alert(`Need more players!`);
+            impIndices = []; while(impIndices.length < countReq) { let r = Math.floor(Math.random() * players.length); if(!impIndices.includes(r)) impIndices.push(r); }
             const cat = document.getElementById('catSelect').value;
-            let source = {};
-            if (cat === 'all') Object.values(library).forEach(c => Object.assign(source, c));
-            else source = library[cat];
+            let source = {}; if (cat === 'all') Object.values(library).forEach(c => Object.assign(source, c)); else source = library[cat];
             secret = Object.keys(source)[Math.floor(Math.random() * Object.keys(source).length)];
             document.getElementById('setup').classList.add('hidden');
-            document.getElementById('reveal').classList.remove('hidden');
+            document.getElementById('reveal-role').classList.remove('hidden');
             updateUI();
         }
+
         function updateUI() {
+            hasSeen = false;
+            const doneBtn = document.getElementById('doneBtn');
+            doneBtn.disabled = true;
+            doneBtn.innerText = "VIEW WORD FIRST";
+            
             document.getElementById('playerLabel').innerText = players[current];
             document.getElementById('secretContainer').innerText = "LOCKED";
             document.getElementById('secretContainer').className = "secret-box";
             document.getElementById('imposterHint').classList.add('hidden');
+            
+            // Set random player color
+            const color = playerColors[current % playerColors.length];
+            document.getElementById('card').style.borderColor = color;
+            document.body.style.backgroundColor = color + "22"; // Very faint glow in background
         }
+        
         const show = (e) => {
             e.preventDefault();
+            hasSeen = true;
+            const doneBtn = document.getElementById('doneBtn');
+            doneBtn.disabled = false;
+            doneBtn.innerText = "DONE";
+            doneBtn.style.background = "var(--border)";
+
             const box = document.getElementById('secretContainer');
             if (impIndices.includes(current)) {
-                box.innerText = "IMPOSTER";
-                box.classList.add('imposter-text');
-                let clue = "GENERAL";
-                for (let c in library) if (library[c][secret]) clue = library[c][secret];
+                box.innerText = "IMPOSTER"; box.classList.add('imposter-text');
+                let clue = "GENERAL"; for (let c in library) if (library[c][secret]) clue = library[c][secret];
                 document.getElementById('smartClue').innerText = clue.toUpperCase();
                 document.getElementById('imposterHint').classList.remove('hidden');
             } else { box.innerText = secret; }
         };
-        const hide = () => {
-            document.getElementById('secretContainer').innerText = "LOCKED";
-            document.getElementById('imposterHint').classList.add('hidden');
-        };
+
+        const hide = () => { document.getElementById('secretContainer').innerText = "LOCKED"; document.getElementById('imposterHint').classList.add('hidden'); };
         const hb = document.getElementById('holdBtn');
         hb.addEventListener('pointerdown', show); hb.addEventListener('pointerup', hide); hb.addEventListener('pointerleave', hide);
-        document.getElementById('nameInput').onkeypress = (e) => { if(e.key === 'Enter') addPlayer(); };
+        
         function finishReveal() {
             current++;
-            if (current < players.length) updateUI();
-            else {
-                document.getElementById('gameSummary').innerText = `Discussion Start! Find the ${impIndices.length} Imposter(s).`;
-                document.getElementById('reveal').classList.add('hidden');
+            if (current < players.length) {
+                updateUI();
+            } else {
+                document.body.style.backgroundColor = "var(--bg)";
+                document.getElementById('card').style.borderColor = "var(--border)";
+                document.getElementById('reveal-role').classList.add('hidden');
                 document.getElementById('discuss').classList.remove('hidden');
             }
         }
+
+        function showResults() {
+            document.getElementById('discuss').classList.add('hidden');
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('finalWord').innerText = secret;
+            const imposterNamesDiv = document.getElementById('imposterNames');
+            imposterNamesDiv.innerHTML = '';
+            impIndices.forEach(idx => {
+                const nameSpan = document.createElement('span');
+                nameSpan.classList.add('imposter-reveal-name');
+                nameSpan.innerText = players[idx];
+                imposterNamesDiv.appendChild(nameSpan);
+            });
+        }
+
+        document.getElementById('nameInput').onkeypress = (e) => { if(e.key === 'Enter') addPlayer(); };
         render();
     </script>
 </body>
