@@ -58,7 +58,8 @@
         .secret-box { height: 90px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; font-weight: 900; background: rgba(0,0,0,0.5); border-radius: 24px; border: 2px dashed rgba(255,255,255,0.2); margin-bottom: 15px; text-transform: uppercase; }
         .hint-box { background: rgba(248, 81, 73, 0.2); border: 1px solid var(--danger); padding: 14px; border-radius: 18px; text-align: left; font-size: 0.85rem; color: #ffa198; margin-bottom: 15px; }
 
-        #doneWrapper { height: 60px; opacity: 0; pointer-events: none; transition: 0.3s; }
+        /* THE DONE BUTTON (INSTANT UNLOCK ON CLICK) */
+        #doneWrapper { height: 60px; opacity: 0; pointer-events: none; transition: 0.2s; }
         .unlocked { opacity: 1 !important; pointer-events: auto !important; }
         
         .action-btn { width: 100%; padding: 18px; border-radius: 16px; border: none; background: #30363d; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; }
@@ -111,7 +112,7 @@
         const cardColors = ["#1e293b", "#164e63", "#1e3a8a", "#4c1d95", "#701a75", "#5b21b6", "#1e40af", "#3730a3"];
         
         let players = JSON.parse(localStorage.getItem('gameNames')) || [];
-        let impIndices = [], secret, current = 0, holdTimer;
+        let impIndices = [], secret, current = 0;
 
         function showAlert(msg) {
             document.getElementById('alertMessage').innerText = msg;
@@ -141,7 +142,7 @@
             if (players.length < countReq + 1) return showAlert(`Need ${countReq + 1} players!`);
             impIndices = []; while(impIndices.length < countReq) { let r = Math.floor(Math.random() * players.length); if(!impIndices.includes(r)) impIndices.push(r); }
             const cat = document.getElementById('catSelect').value;
-            let src = {}; if (cat === 'all') Object.values(library).forEach(c => Object.assign(src, c)); else src = library[cat];
+            let src = {}; if (cat === 'all') Object.values(library).forEach(c => Object.assign(source, c)); else src = library[cat];
             secret = Object.keys(src)[Math.floor(Math.random() * Object.keys(src).length)];
             document.getElementById('setup').classList.add('hidden');
             document.getElementById('reveal-role').classList.remove('hidden');
@@ -161,6 +162,9 @@
         const startHold = (e) => {
             e.preventDefault();
             const box = document.getElementById('secretContainer');
+            // INSTANTLY REVEAL DONE BUTTON
+            document.getElementById('doneWrapper').classList.add('unlocked');
+            
             if (impIndices.includes(current)) {
                 box.innerText = "IMPOSTER";
                 box.classList.add('imposter-text');
@@ -168,12 +172,9 @@
                 document.getElementById('smartClue').innerText = clue.toUpperCase();
                 document.getElementById('imposterHint').classList.remove('hidden');
             } else { box.innerText = secret; }
-            // TIMER SET TO 250ms (0.25s)
-            holdTimer = setTimeout(() => { document.getElementById('doneWrapper').classList.add('unlocked'); }, 250);
         };
 
         const endHold = () => {
-            clearTimeout(holdTimer);
             const box = document.getElementById('secretContainer');
             box.innerText = "LOCKED";
             box.classList.remove('imposter-text');
