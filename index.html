@@ -10,7 +10,6 @@
             --text: #e6edf3; --dim: #8b949e; --border: #21262d; 
             --card-default: #161b22;
         }
-        /* 1. UNIVERSAL BLUE REMOVAL */
         * { box-sizing: border-box; outline: none !important; -webkit-tap-highlight-color: transparent !important; user-select: none; }
         
         body { 
@@ -60,14 +59,12 @@
 </head>
 <body>
 
-    <!-- IN-PAGE ALERT BOX -->
     <div id="customAlert">
-        <span id="alertMessage">Error Message</span>
+        <span id="alertMessage">Error</span>
         <span class="close-alert" onclick="hideAlert()">×</span>
     </div>
 
     <div id="card" class="app-card">
-        <!-- SETUP -->
         <div id="setup">
             <h1>Imposter</h1>
             <div class="input-row"><input type="text" id="nameInput" placeholder="Add Player Name" enterkeyhint="done"><button class="add-btn" onclick="addPlayer()"></button></div>
@@ -77,23 +74,20 @@
             <button class="action-btn" onclick="initGame()" style="background:var(--accent);">START GAME</button>
         </div>
 
-        <!-- REVEAL -->
         <div id="reveal-role" class="hidden">
             <h2 id="playerLabel">Player</h2>
-            <p id="subInstr" style="font-size: 0.8rem; color: var(--dim); margin-bottom: 10px;">Hold for 1.5s to see your word</p>
+            <p id="subInstr" style="font-size: 0.8rem; color: var(--dim); margin-bottom: 10px;">Hold to reveal</p>
             <div id="secretContainer" class="secret-box">LOCKED</div>
             <button id="holdBtn" class="hold-btn">HOLD TO REVEAL</button>
             <div id="imposterHint" class="hint-box hidden"><strong style="color:var(--danger)">VAGUE HINT:</strong> <span id="smartClue">---</span></div>
             <div id="doneWrapper"><button class="action-btn" onclick="finishReveal()">DONE (NEXT)</button></div>
         </div>
 
-        <!-- VOTE -->
         <div id="discuss" class="hidden">
             <h1 style="color:var(--danger)">VOTE</h1>
             <button class="action-btn" onclick="showResults()">REVEAL TRUTH</button>
         </div>
 
-        <!-- RESULTS -->
         <div id="results" class="hidden">
             <h1 style="color:var(--accent)">RESULTS</h1>
             <div id="finalWord" class="secret-box" style="margin-bottom:10px;">---</div>
@@ -110,7 +104,6 @@
         let players = JSON.parse(localStorage.getItem('gameNames')) || [];
         let impIndices = [], secret, current = 0, holdTimer;
 
-        // Custom In-Page Alert System
         function showAlert(msg) {
             document.getElementById('alertMessage').innerText = msg;
             document.getElementById('customAlert').classList.add('show');
@@ -122,7 +115,6 @@
             const input = document.getElementById('nameInput');
             const name = input.value.trim();
             if (!name) return;
-            // DUPLICATE GUARD
             if (players.some(p => p.toLowerCase() === name.toLowerCase())) {
                 showAlert("Duplicate name! Choose a unique name.");
                 return;
@@ -170,7 +162,8 @@
                 box.innerText = secret;
                 box.classList.remove('imposter-text');
             }
-            holdTimer = setTimeout(() => { document.getElementById('doneWrapper').classList.add('unlocked'); }, 1500);
+            // Set to 500ms (0.5 seconds)
+            holdTimer = setTimeout(() => { document.getElementById('doneWrapper').classList.add('unlocked'); }, 500);
         };
 
         const endHold = () => {
