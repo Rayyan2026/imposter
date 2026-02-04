@@ -7,71 +7,64 @@
     <style>
         :root { 
             --bg: #0b0e14; --surface: #161b22; --accent: #238636; --danger: #f85149; 
-            --text: #e6edf3; --dim: #8b949e; --sb-track: #0d1117; --sb-thumb: #30363d; 
+            --text: #e6edf3; --dim: #8b949e; --border: #30363d;
         }
 
         /* CUSTOM SCROLLBAR */
-        * { scrollbar-width: thin; scrollbar-color: var(--sb-thumb) var(--sb-track); -webkit-tap-highlight-color: transparent; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: var(--sb-track); }
-        ::-webkit-scrollbar-thumb { background: var(--sb-thumb); border-radius: 10px; }
+        * { scrollbar-width: thin; scrollbar-color: #30363d #0d1117; -webkit-tap-highlight-color: transparent; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0d1117; }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
 
         body { 
             font-family: -apple-system, system-ui, sans-serif; 
             background: var(--bg); color: var(--text); 
             margin: 0; display: flex; align-items: center; justify-content: center; 
             min-height: 100dvh; user-select: none; -webkit-user-select: none;
-            touch-action: none;
+            touch-action: manipulation;
         }
 
         .app-card { 
             background: var(--surface); width: 90%; max-width: 400px; 
-            padding: 1.5rem; border-radius: 28px; border: 1px solid #30363d; 
+            padding: 1.5rem; border-radius: 28px; border: 1px solid var(--border); 
             text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            touch-action: pan-y;
         }
 
         h1 { color: var(--accent); margin: 0 0 1rem 0; font-size: 2.5rem; letter-spacing: -1.5px; }
 
-        .input-wrapper { position: relative; width: 100%; margin-bottom: 12px; }
+        /* INPUT AREA */
+        .input-row { position: relative; display: flex; gap: 8px; margin-bottom: 12px; }
         input { 
-            width: 100%; padding: 16px 60px 16px 16px; border-radius: 14px; border: 1px solid #30363d; 
-            background: #0d1117; color: white; box-sizing: border-box; outline: none; font-size: 16px; 
+            flex: 1; padding: 14px; border-radius: 12px; border: 1px solid var(--border); 
+            background: #0d1117; color: white; outline: none; font-size: 16px; 
         }
-
-        /* CUSTOM DROPDOWN STYLING */
-        .select-group { text-align: left; margin-bottom: 12px; }
-        .select-group label { display: block; font-size: 0.75rem; color: var(--dim); margin-bottom: 6px; font-weight: bold; text-transform: uppercase; }
-        
-        select { 
-            width: 100%; padding: 16px; border-radius: 14px; border: 1px solid #30363d; 
-            background: #0d1117; color: white; outline: none; font-size: 16px;
-            appearance: none; -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org' fill='none' stroke='%238b949e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 18px;
-        }
-
-        .arrow-confirm {
-            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-            width: 40px; height: 40px; background: var(--accent); border-radius: 50%;
+        .add-btn {
+            width: 48px; height: 48px; background: var(--accent); border-radius: 50%;
             display: flex; align-items: center; justify-content: center; border: none;
-            cursor: pointer;
+            cursor: pointer; flex-shrink: 0;
         }
-        .arrow-confirm::after {
-            content: ''; width: 10px; height: 10px; border-top: 3px solid white; 
-            border-right: 3px solid white; transform: rotate(45deg); margin-right: 3px;
+        .add-btn::after {
+            content: ''; width: 8px; height: 8px; border-top: 3px solid white; 
+            border-right: 3px solid white; transform: rotate(45deg); margin-right: 2px;
         }
 
-        .player-list { max-height: 120px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px; touch-action: pan-y; }
-        .player-badge { background: #21262d; padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; margin-bottom: 8px; border: 1px solid #30363d; }
+        .player-list { max-height: 140px; overflow-y: auto; margin-bottom: 15px; border-radius: 10px; }
+        .player-badge { background: #21262d; padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; margin-bottom: 6px; border: 1px solid var(--border); font-size: 0.95rem; }
 
-        .hold-btn { width: 100%; height: 160px; border-radius: 20px; border: none; background: linear-gradient(145deg, #2ea043, #238636); color: white; font-size: 1.4rem; font-weight: 900; margin: 20px 0; }
-        .secret-box { height: 100px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 900; background: rgba(0,0,0,0.4); border-radius: 20px; border: 2px dashed #30363d; margin-bottom: 15px; text-transform: uppercase; }
+        /* SETTINGS - Simple Stack for Mobile/Desktop */
+        .setting-item { text-align: left; margin-bottom: 12px; }
+        .setting-item label { display: block; font-size: 0.7rem; color: var(--dim); margin-bottom: 4px; font-weight: bold; text-transform: uppercase; }
+        select { 
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); 
+            background: #0d1117; color: white; outline: none; font-size: 16px; cursor: pointer;
+        }
 
-        .hint-box { background: rgba(248, 81, 73, 0.12); border: 1px solid var(--danger); padding: 16px; border-radius: 16px; text-align: left; font-size: 0.95rem; color: #ffa198; margin-bottom: 15px; }
-        .action-btn { width: 100%; padding: 18px; border-radius: 14px; border: none; background: #30363d; color: white; font-weight: 700; font-size: 1.1rem; }
+        /* GAMEPLAY */
+        .hold-btn { width: 100%; height: 140px; border-radius: 20px; border: none; background: linear-gradient(145deg, #2ea043, #238636); color: white; font-size: 1.3rem; font-weight: 900; margin: 15px 0; cursor: pointer; }
+        .secret-box { height: 90px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 900; background: rgba(0,0,0,0.4); border-radius: 18px; border: 2px dashed var(--border); margin-bottom: 15px; text-transform: uppercase; }
+        .hint-box { background: rgba(248, 81, 73, 0.12); border: 1px solid var(--danger); padding: 14px; border-radius: 14px; text-align: left; font-size: 0.85rem; color: #ffa198; line-height: 1.4; margin-bottom: 15px; }
+
+        .action-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: #30363d; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; }
         .hidden { display: none; }
         .imposter-text { color: var(--danger); border-color: var(--danger); }
     </style>
@@ -80,35 +73,35 @@
     <div class="app-card">
         <div id="setup">
             <h1>Imposter</h1>
-            <div class="input-wrapper">
-                <input type="text" id="nameInput" placeholder="Enter Name" enterkeyhint="done" onkeypress="handleKey(event)">
-                <button class="arrow-confirm" onclick="addPlayer()"></button>
+            <div class="input-row">
+                <input type="text" id="nameInput" placeholder="Add Player Name" enterkeyhint="done" onkeypress="if(e=>e.key==='Enter')addPlayer()">
+                <button class="add-btn" onclick="addPlayer()"></button>
             </div>
             <div id="playerList" class="player-list"></div>
             
-            <div class="select-group">
+            <div class="setting-item">
                 <label>Category</label>
                 <select id="catSelect">
                     <option value="all">Mixed Genres</option>
-                    <option value="animals">Wild Animals</option>
-                    <option value="food">Gourmet Food</option>
-                    <option value="movies">Classic Movies</option>
+                    <option value="animals">Animals</option>
+                    <option value="food">Food</option>
+                    <option value="movies">Movies</option>
                 </select>
             </div>
             
-            <div class="select-group">
-                <label>Number of Imposters</label>
+            <div class="setting-item">
+                <label>Total Imposters</label>
                 <select id="impCount">
                     <option value="1">1 Imposter</option>
                     <option value="2">2 Imposters</option>
                 </select>
             </div>
 
-            <button class="action-btn" onclick="initGame()" style="background:var(--accent); margin-top:10px;">START MISSION</button>
+            <button class="action-btn" onclick="initGame()" style="background:var(--accent); margin-top:5px;">START GAME</button>
         </div>
 
         <div id="reveal" class="hidden">
-            <h2 id="playerLabel" style="color:var(--dim)">Player</h2>
+            <h2 id="playerLabel" style="color:var(--dim); margin-bottom: 5px;">Player</h2>
             <div id="secretContainer" class="secret-box">LOCKED</div>
             <button id="holdBtn" class="hold-btn">HOLD TO REVEAL</button>
             <div id="imposterHint" class="hint-box hidden">
@@ -119,7 +112,7 @@
 
         <div id="discuss" class="hidden">
             <h1 style="color:var(--danger)">VOTE</h1>
-            <p id="gameSummary" style="color:var(--dim)"></p>
+            <p id="gameSummary" style="color:var(--dim); margin-bottom: 20px;"></p>
             <button class="action-btn" onclick="location.reload()" style="background:var(--danger)">NEW ROUND</button>
         </div>
     </div>
@@ -131,18 +124,16 @@
             movies: { "Star Wars": "Fiction", "Toy Story": "Animation", "Titanic": "History", "Joker": "Drama", "Inception": "Mental" }
         };
         
-        let players = JSON.parse(localStorage.getItem('impNames')) || [];
+        let players = JSON.parse(localStorage.getItem('gameNames')) || [];
         let impIndices = [];
         let secret, current = 0;
-
-        function handleKey(e) { if (e.key === 'Enter') { e.preventDefault(); addPlayer(); } }
 
         function addPlayer() {
             const input = document.getElementById('nameInput');
             const val = input.value.trim();
             if (val && players.length < 20) {
                 players.push(val);
-                localStorage.setItem('impNames', JSON.stringify(players));
+                localStorage.setItem('gameNames', JSON.stringify(players));
                 input.value = '';
                 render();
             }
@@ -156,13 +147,13 @@
 
         function removePlayer(i) {
             players.splice(i, 1);
-            localStorage.setItem('impNames', JSON.stringify(players));
+            localStorage.setItem('gameNames', JSON.stringify(players));
             render();
         }
 
         function initGame() {
             const countReq = parseInt(document.getElementById('impCount').value);
-            if (players.length < countReq + 1) return alert(`Add more players!`);
+            if (players.length < countReq + 1) return alert(`Need more players!`);
             impIndices = [];
             while(impIndices.length < countReq) {
                 let r = Math.floor(Math.random() * players.length);
@@ -188,15 +179,16 @@
         const btn = document.getElementById('holdBtn');
         const show = (e) => {
             e.preventDefault();
+            const box = document.getElementById('secretContainer');
             if (impIndices.includes(current)) {
-                document.getElementById('secretContainer').innerText = "IMPOSTER";
-                document.getElementById('secretContainer').classList.add('imposter-text');
+                box.innerText = "IMPOSTER";
+                box.classList.add('imposter-text');
                 let clue = "GENERAL";
                 for (let c in library) if (library[c][secret]) clue = library[c][secret];
                 document.getElementById('smartClue').innerText = clue.toUpperCase();
                 document.getElementById('imposterHint').classList.remove('hidden');
             } else {
-                document.getElementById('secretContainer').innerText = secret;
+                box.innerText = secret;
             }
         };
         const hide = (e) => {
@@ -213,7 +205,7 @@
             current++;
             if (current < players.length) updateUI();
             else {
-                document.getElementById('gameSummary').innerText = `Discussion Start! There are ${impIndices.length} Imposters.`;
+                document.getElementById('gameSummary').innerText = `Discuss! There are ${impIndices.length} Imposters.`;
                 document.getElementById('reveal').classList.add('hidden');
                 document.getElementById('discuss').classList.remove('hidden');
             }
