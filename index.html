@@ -12,10 +12,11 @@
         }
         * { box-sizing: border-box; outline: none !important; -webkit-tap-highlight-color: transparent !important; user-select: none; }
         
+        /* DARK SCROLLBAR */
         .player-list::-webkit-scrollbar { width: 6px !important; }
         .player-list::-webkit-scrollbar-track { background: #0d1117 !important; border-radius: 10px; }
         .player-list::-webkit-scrollbar-thumb { background: #30363d !important; border-radius: 10px; border: 1px solid #0d1117; }
-        .player-list { scrollbar-width: thin; scrollbar-color: #30363d #0d1117; }
+        .player-list { scrollbar-width: thin; scrollbar-color: #30363d #0d1117; overflow-y: auto; }
 
         body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100dvh; touch-action: manipulation; }
 
@@ -58,7 +59,7 @@
         <div id="setup">
             <h1>Imposter</h1>
             <div class="input-row"><input type="text" id="nameInput" placeholder="Add Player Name" enterkeyhint="done"><button class="add-btn" onclick="addPlayer()"></button></div>
-            <div id="playerList" class="player-list" style="max-height: 140px; overflow-y: auto; margin-bottom: 15px;"></div>
+            <div id="playerList" class="player-list" style="max-height: 140px;"></div>
             <div style="text-align:left; margin-bottom:10px;"><label style="font-size:0.7rem; color:var(--dim); font-weight:bold;">CATEGORY</label>
                 <select id="catSelect" onchange="saveSettings()">
                     <option value="all">Mixed</option>
@@ -74,7 +75,7 @@
                     <option value="3">3 Imposters</option>
                 </select>
             </div>
-            <button class="action-btn" id="startGameBtn" onclick="initGame()" style="background:var(--accent);">START GAME</button>
+            <button class="action-btn" id="mainStartBtn" onclick="initGame()" style="background:var(--accent);">START GAME</button>
         </div>
 
         <!-- REVEAL SCREEN -->
@@ -100,36 +101,26 @@
             <div id="finalWord" class="secret-box" style="margin-bottom:10px;">---</div>
             <p style="color:var(--dim);">The Imposter(s) were:</p>
             <div id="imposterNames"></div>
-            <button class="action-btn" onclick="resetGameUI()" style="background:var(--danger); margin-top: 20px;">NEW ROUND</button>
+            <button class="action-btn" onclick="resetApp()" style="background:var(--danger); margin-top: 20px;">NEW ROUND</button>
         </div>
     </div>
 
     <script>
-        // Library with 300+ possible variations using rotating vague hints
         const library = {
-            objects: {
-                "Hammer": ["Metal", "Tool", "Handheld"], "Pencil": ["Writing", "Wood", "Tool"], "Laptop": ["Electronic", "Screen", "Work"], "Compass": ["Direction", "Navigation", "Tool"], "Umbrella": ["Protection", "Weather", "Portable"],
-                "Key": ["Metal", "Lock", "Pocket"], "Watch": ["Time", "Wrist", "Mechanical"], "Mirror": ["Glass", "Reflection", "Indoor"], "Scissors": ["Cutting", "Sharp", "Manual"], "Flashlight": ["Light", "Battery", "Outdoor"]
-                // ... (System selects randomly from 100+ object entries internally)
-            },
-            nature: {
-                "Cactus": ["Plant", "Desert", "Spiky"], "Shark": ["Water", "Ocean", "Predator"], "Mountain": ["High", "Stone", "Natural"], "Volcano": ["Fire", "Geology", "Dangerous"], "Sunflower": ["Yellow", "Plant", "Seed"],
-                "Elephant": ["Gray", "Large", "Mammal"], "Spider": ["Legs", "Crawl", "Small"], "Waterfall": ["Water", "Flow", "Landscape"], "Bonsai": ["Tree", "Small", "Green"], "Lightning": ["Sky", "Energy", "Fast"]
-            },
-            leisure: {
-                "Pizza": ["Edible", "Italian", "Round"], "Guitar": ["Strings", "Music", "Acoustic"], "Chess": ["Game", "Strategy", "Wood"], "Popcorn": ["Cinema", "Corn", "Snack"], "Camera": ["Image", "Memory", "Lense"],
-                "Bicycle": ["Transport", "Wheels", "Pedal"], "Coffee": ["Hot", "Drink", "Morning"], "Telescope": ["Space", "Lense", "View"], "Sushi": ["Japanese", "Rice", "Cold"], "Skateboard": ["Board", "Wheels", "Active"]
-            }
+            objects: { "Hammer": ["Metal", "Tool", "Handheld"], "Pencil": ["Writing", "Wood", "Tool"], "Laptop": ["Electronic", "Screen", "Work"], "Compass": ["Direction", "Navigation", "Tool"], "Umbrella": ["Protection", "Weather", "Portable"], "Key": ["Metal", "Lock", "Pocket"], "Watch": ["Time", "Wrist", "Mechanical"], "Mirror": ["Glass", "Reflection", "Indoor"], "Scissors": ["Cutting", "Sharp", "Manual"], "Flashlight": ["Light", "Battery", "Outdoor"] },
+            nature: { "Cactus": ["Plant", "Desert", "Spiky"], "Shark": ["Water", "Ocean", "Predator"], "Mountain": ["High", "Stone", "Natural"], "Volcano": ["Fire", "Geology", "Dangerous"], "Sunflower": ["Yellow", "Plant", "Seed"], "Elephant": ["Gray", "Large", "Mammal"], "Spider": ["Legs", "Crawl", "Small"], "Waterfall": ["Water", "Flow", "Landscape"], "Bonsai": ["Tree", "Small", "Green"], "Lightning": ["Sky", "Energy", "Fast"] },
+            leisure: { "Pizza": ["Edible", "Italian", "Round"], "Guitar": ["Strings", "Music", "Acoustic"], "Chess": ["Game", "Strategy", "Wood"], "Popcorn": ["Cinema", "Corn", "Snack"], "Camera": ["Image", "Memory", "Lense"], "Bicycle": ["Transport", "Wheels", "Pedal"], "Coffee": ["Hot", "Drink", "Morning"], "Telescope": ["Space", "Lense", "View"], "Sushi": ["Japanese", "Rice", "Cold"], "Skateboard": ["Board", "Wheels", "Active"] }
         };
 
         const cardColors = ["#1e293b", "#164e63", "#1e3a8a", "#4c1d95", "#701a75", "#5b21b6", "#1e40af", "#3730a3"];
         let players = JSON.parse(localStorage.getItem('gameNames')) || [];
         let impIndices = [], secret, current = 0, currentHint = "";
 
-        // Load Settings
         window.onload = () => {
-            document.getElementById('catSelect').value = localStorage.getItem('lastCat') || 'all';
-            document.getElementById('impCount').value = localStorage.getItem('lastImp') || '1';
+            const lastCat = localStorage.getItem('lastCat');
+            const lastImp = localStorage.getItem('lastImp');
+            if(lastCat) document.getElementById('catSelect').value = lastCat;
+            if(lastImp) document.getElementById('impCount').value = lastImp;
             render();
         };
 
@@ -139,16 +130,18 @@
         }
 
         function showAlert(msg) {
+            const alert = document.getElementById('customAlert');
             document.getElementById('alertMessage').innerText = msg;
-            document.getElementById('customAlert').classList.add('show');
-            setTimeout(() => document.getElementById('customAlert').classList.remove('show'), 3000);
+            alert.classList.add('show');
+            setTimeout(hideAlert, 3000);
         }
+        function hideAlert() { document.getElementById('customAlert').classList.remove('show'); }
 
         function addPlayer() {
             const input = document.getElementById('nameInput');
             const name = input.value.trim();
             if (!name) return;
-            if (players.some(p => p.toLowerCase() === name.toLowerCase())) return showAlert("Duplicate name!");
+            if (players.some(p => p.toLowerCase() === name.toLowerCase())) return showAlert("Name already exists!");
             players.push(name);
             localStorage.setItem('gameNames', JSON.stringify(players));
             input.value = ''; render();
@@ -168,12 +161,17 @@
             const countReq = parseInt(document.getElementById('impCount').value);
             if (players.length < countReq + 1) return showAlert(`Need ${countReq + 1} players!`);
             
+            // RESET GAME STATE
+            current = 0;
             impIndices = [];
+            
+            // Randomize Imposters
             while(impIndices.length < countReq) {
                 let r = Math.floor(Math.random() * players.length);
                 if(!impIndices.includes(r)) impIndices.push(r);
             }
 
+            // Word Selection
             const cat = document.getElementById('catSelect').value;
             let src = {};
             if (cat === 'all') Object.values(library).forEach(c => Object.assign(src, c));
@@ -181,22 +179,12 @@
             
             const keys = Object.keys(src);
             secret = keys[Math.floor(Math.random() * keys.length)];
-            
-            // Pick ONE random hint from the available options for this match
             const hints = src[secret];
             currentHint = hints[Math.floor(Math.random() * hints.length)];
 
             document.getElementById('setup').classList.add('hidden');
             document.getElementById('reveal-role').classList.remove('hidden');
-            current = 0;
             updateUI();
-        }
-
-        function resetGameUI() {
-            document.getElementById('results').classList.add('hidden');
-            document.getElementById('setup').classList.remove('hidden');
-            // Logic fix: Ensure startGameBtn is clean
-            document.getElementById('startGameBtn').disabled = false;
         }
 
         function updateUI() {
@@ -222,8 +210,9 @@
         };
 
         const endHold = () => {
-            document.getElementById('secretContainer').innerText = "LOCKED";
-            document.getElementById('secretContainer').classList.remove('imposter-text');
+            const box = document.getElementById('secretContainer');
+            box.innerText = "LOCKED";
+            box.classList.remove('imposter-text');
             document.getElementById('imposterHint').classList.add('hidden');
         };
 
@@ -234,8 +223,9 @@
 
         function finishReveal() {
             current++;
-            if (current < players.length) updateUI();
-            else {
+            if (current < players.length) {
+                updateUI();
+            } else {
                 document.getElementById('card').style.backgroundColor = "var(--card-default)";
                 document.getElementById('reveal-role').classList.add('hidden');
                 document.getElementById('discuss').classList.remove('hidden');
@@ -247,6 +237,13 @@
             document.getElementById('results').classList.remove('hidden');
             document.getElementById('finalWord').innerText = secret;
             document.getElementById('imposterNames').innerHTML = impIndices.map(idx => `<div style="color:var(--danger); font-size:1.5rem; margin:10px; font-weight:bold;">${players[idx]}</div>`).join('');
+        }
+
+        function resetApp() {
+            document.getElementById('results').classList.add('hidden');
+            document.getElementById('setup').classList.remove('hidden');
+            // Explicitly ensure the start button is enabled
+            document.getElementById('mainStartBtn').disabled = false;
         }
 
         document.getElementById('nameInput').onkeypress = (e) => { if(e.key === 'Enter') addPlayer(); };
