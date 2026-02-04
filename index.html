@@ -6,60 +6,65 @@
     <title>Imposter</title>
     <style>
         :root { 
-            --bg: #0b0e14; --surface: #161b22; --accent: #238636; --danger: #f85149; 
-            --text: #e6edf3; --dim: #8b949e; --border: #30363d; --hover-bg: #2d333b;
+            --bg: #05070a; --surface: #0f1115; --accent: #238636; --danger: #f85149; 
+            --text: #e6edf3; --dim: #8b949e; --border: #21262d; 
         }
 
-        /* 1. UNIVERSAL BLUE REMOVAL */
         * { 
             box-sizing: border-box; outline: none !important; -webkit-tap-highlight-color: transparent !important; 
-            -webkit-user-select: none; user-select: none; scrollbar-width: thin; scrollbar-color: #30363d #0d1117;
+            -webkit-user-select: none; user-select: none; scrollbar-width: thin; scrollbar-color: #30363d #05070a;
         }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0d1117; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #05070a; }
         ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
 
         body { 
             font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); 
             margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100dvh; 
-            touch-action: manipulation; transition: background 0.5s ease;
+            touch-action: manipulation;
         }
 
         .app-card { 
-            background: var(--surface); width: 90%; max-width: 400px; padding: 1.5rem; 
-            border-radius: 28px; border: 1px solid var(--border); text-align: center; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5); transition: border-color 0.5s ease;
+            background: var(--surface); width: 92%; max-width: 400px; padding: 1.5rem; 
+            border-radius: 32px; border: 2px solid var(--border); text-align: center; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        h1 { color: var(--accent); margin: 0 0 1rem 0; font-size: 2.5rem; letter-spacing: -1.5px; }
+        h1 { color: var(--accent); margin: 0 0 1rem 0; font-size: 2.2rem; letter-spacing: -1.5px; }
 
         .input-row { position: relative; display: flex; gap: 8px; margin-bottom: 12px; }
-        input { flex: 1; padding: 14px 50px 14px 14px; border-radius: 14px; border: 1px solid var(--border); background: #0d1117; color: white; font-size: 16px; width: 100%; -webkit-user-select: text; user-select: text; }
-        input:focus { border-color: var(--dim); background: var(--hover-bg); }
+        input { flex: 1; padding: 14px 50px 14px 14px; border-radius: 16px; border: 1px solid var(--border); background: #000; color: white; font-size: 16px; width: 100%; -webkit-user-select: text; user-select: text; }
 
         .add-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; }
         .add-btn::after { content: ''; width: 8px; height: 8px; border-top: 3px solid white; border-right: 3px solid white; transform: rotate(45deg); margin-right: 2px; }
 
-        .player-list { max-height: 140px; overflow-y: auto; margin-bottom: 15px; border-radius: 14px; text-align: left; }
-        .player-badge { background: #21262d; padding: 10px 14px; border-radius: 14px; display: flex; justify-content: space-between; margin-bottom: 6px; border: 1px solid var(--border); }
+        .player-badge { background: rgba(255,255,255,0.05); padding: 10px 14px; border-radius: 14px; display: flex; justify-content: space-between; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.1); }
 
-        .setting-item { text-align: left; margin-bottom: 12px; }
-        .setting-item label { display: block; font-size: 0.7rem; color: var(--dim); margin-bottom: 4px; font-weight: bold; text-transform: uppercase; }
-        select { width: 100%; padding: 12px; border-radius: 14px; border: 1px solid var(--border); background: #0d1117; color: white; font-size: 16px; cursor: pointer; appearance: none; -webkit-appearance: none; }
+        select { width: 100%; padding: 14px; border-radius: 16px; border: 1px solid var(--border); background: #000; color: white; font-size: 16px; appearance: none; -webkit-appearance: none; }
 
-        .hold-btn { width: 100%; height: 140px; border-radius: 28px; border: none; background: linear-gradient(145deg, #2ea043, #238636); color: white; font-size: 1.3rem; font-weight: 900; margin: 15px 0; cursor: pointer; touch-action: none; }
-        .hold-btn:active { opacity: 0.8; }
+        /* HOLD MECHANIC */
+        .hold-btn { 
+            width: 100%; height: 150px; border-radius: 24px; border: none; 
+            background: rgba(255,255,255,0.1); color: white; font-size: 1.2rem; 
+            font-weight: 900; margin: 20px 0; cursor: pointer; touch-action: none;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .hold-btn:active { background: rgba(255,255,255,0.2); }
 
-        .secret-box { height: 90px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 900; background: rgba(0,0,0,0.4); border-radius: 24px; border: 2px dashed var(--border); margin-bottom: 15px; text-transform: uppercase; }
-        .hint-box { background: rgba(248, 81, 73, 0.12); border: 1px solid var(--danger); padding: 14px; border-radius: 20px; text-align: left; font-size: 0.85rem; color: #ffa198; margin-bottom: 15px; }
-
-        .action-btn { width: 100%; padding: 16px; border-radius: 14px; border: none; background: #30363d; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: opacity 0.3s, background 0.3s; }
-        .action-btn:disabled { opacity: 0.3; cursor: not-allowed; background: #1a1a1a !important; }
+        .secret-box { height: 100px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; font-weight: 900; background: rgba(0,0,0,0.6); border-radius: 24px; border: 2px dashed rgba(255,255,255,0.2); margin-bottom: 15px; text-transform: uppercase; }
         
+        .hint-box { background: rgba(248, 81, 73, 0.15); border: 1px solid var(--danger); padding: 14px; border-radius: 18px; text-align: left; font-size: 0.85rem; color: #ffa198; margin-bottom: 15px; }
+
+        .action-btn { width: 100%; padding: 18px; border-radius: 16px; border: none; background: #30363d; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; }
+        
+        /* HIDDEN BY DEFAULT TO PREVENT SKIPPING */
+        .done-btn-container { height: 60px; overflow: hidden; transition: all 0.3s ease; opacity: 0; pointer-events: none; }
+        .done-btn-visible { opacity: 1; pointer-events: auto; }
+
         .hidden { display: none; }
         .imposter-text { color: var(--danger) !important; border-color: var(--danger) !important; }
-        .imposter-reveal-name { color: var(--danger); font-weight: bold; display: block; margin: 5px 0; }
+        .imposter-reveal-name { color: var(--danger); font-weight: bold; display: block; margin: 10px 0; font-size: 1.4rem; }
     </style>
 </head>
 <body>
@@ -70,18 +75,21 @@
                 <input type="text" id="nameInput" placeholder="Add Player Name" enterkeyhint="done">
                 <button class="add-btn" onclick="addPlayer()"></button>
             </div>
-            <div id="playerList" class="player-list"></div>
-            <div class="setting-item"><label>Category</label><select id="catSelect"><option value="all">Mixed</option><option value="animals">Animals</option><option value="food">Food</option><option value="movies">Movies</option></select></div>
-            <div class="setting-item"><label>Imposters</label><select id="impCount"><option value="1">1 Imposter</option><option value="2">2 Imposters</option></select></div>
+            <div id="playerList" style="max-height: 140px; overflow-y: auto; margin-bottom: 15px;"></div>
+            <div style="text-align:left; margin-bottom:10px;"><label style="font-size:0.7rem; color:var(--dim); font-weight:bold;">CATEGORY</label><select id="catSelect"><option value="all">Mixed</option><option value="animals">Animals</option><option value="food">Food</option><option value="movies">Movies</option></select></div>
+            <div style="text-align:left; margin-bottom:20px;"><label style="font-size:0.7rem; color:var(--dim); font-weight:bold;">IMPOSTERS</label><select id="impCount"><option value="1">1 Imposter</option><option value="2">2 Imposters</option></select></div>
             <button class="action-btn" onclick="initGame()" style="background:var(--accent);">START GAME</button>
         </div>
 
         <div id="reveal-role" class="hidden">
-            <h2 id="playerLabel" style="color:var(--text); margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Player</h2>
+            <h2 id="playerLabel" style="margin-bottom: 5px;">Player</h2>
+            <p id="subInstruction" style="font-size: 0.8rem; color: var(--dim); margin-bottom: 10px;">Hold for 2s to reveal</p>
             <div id="secretContainer" class="secret-box">LOCKED</div>
             <button id="holdBtn" class="hold-btn">HOLD TO REVEAL</button>
             <div id="imposterHint" class="hint-box hidden"><strong style="color:var(--danger)">VAGUE HINT:</strong> <span id="smartClue">---</span></div>
-            <button id="doneBtn" class="action-btn" onclick="finishReveal()" disabled>VIEW WORD FIRST</button>
+            <div id="doneWrapper" class="done-btn-container">
+                <button class="action-btn" onclick="finishReveal()">DONE (NEXT)</button>
+            </div>
         </div>
 
         <div id="discuss" class="hidden">
@@ -102,10 +110,10 @@
 
     <script>
         const library = { animals: { "Lion": "Feline", "Shark": "Aquatic", "Elephant": "Mammal", "Eagle": "Avian", "Spider": "Nature" }, food: { "Pizza": "Italian", "Apple": "Organic", "Pancake": "Breakfast", "Bacon": "Meat", "Hamburger": "Edible" }, movies: { "Star Wars": "Fiction", "Toy Story": "Animation", "Titanic": "History", "Joker": "Drama", "Inception": "Mental" } };
-        const playerColors = ["#1e3a8a", "#581c87", "#701a75", "#4c1d95", "#1e40af", "#3730a3", "#164e63", "#064e3b", "#78350f", "#450a0a"];
+        const playerColors = ["#1a202c", "#1c3d5a", "#22543d", "#285e61", "#2a4365", "#44337a", "#702459", "#742a2a", "#7b341e", "#2d3748"];
         
         let players = JSON.parse(localStorage.getItem('gameNames')) || [];
-        let impIndices = [], secret, current = 0, hasSeen = false;
+        let impIndices = [], secret, current = 0, holdTimer;
 
         function addPlayer() { const input = document.getElementById('nameInput'); if (input.value.trim() && players.length < 20) { players.push(input.value.trim()); localStorage.setItem('gameNames', JSON.stringify(players)); input.value = ''; render(); } }
         function render() { document.getElementById('playerList').innerHTML = players.map((p, i) => `<div class="player-badge"><span>${p}</span><span style="color:var(--danger); font-weight:bold; cursor:pointer;" onclick="removePlayer(${i})">✕</span></div>`).join(''); }
@@ -124,50 +132,50 @@
         }
 
         function updateUI() {
-            hasSeen = false;
-            const doneBtn = document.getElementById('doneBtn');
-            doneBtn.disabled = true;
-            doneBtn.innerText = "VIEW WORD FIRST";
-            
+            document.getElementById('doneWrapper').classList.remove('done-btn-visible');
             document.getElementById('playerLabel').innerText = players[current];
             document.getElementById('secretContainer').innerText = "LOCKED";
             document.getElementById('secretContainer').className = "secret-box";
             document.getElementById('imposterHint').classList.add('hidden');
             
-            // Set random player color
             const color = playerColors[current % playerColors.length];
-            document.getElementById('card').style.borderColor = color;
-            document.body.style.backgroundColor = color + "22"; // Very faint glow in background
+            document.getElementById('card').style.background = color;
+            document.getElementById('card').style.borderColor = "rgba(255,255,255,0.2)";
         }
         
-        const show = (e) => {
+        const startHold = (e) => {
             e.preventDefault();
-            hasSeen = true;
-            const doneBtn = document.getElementById('doneBtn');
-            doneBtn.disabled = false;
-            doneBtn.innerText = "DONE";
-            doneBtn.style.background = "var(--border)";
-
             const box = document.getElementById('secretContainer');
+            box.innerText = impIndices.includes(current) ? "IMPOSTER" : secret;
             if (impIndices.includes(current)) {
-                box.innerText = "IMPOSTER"; box.classList.add('imposter-text');
+                box.classList.add('imposter-text');
                 let clue = "GENERAL"; for (let c in library) if (library[c][secret]) clue = library[c][secret];
                 document.getElementById('smartClue').innerText = clue.toUpperCase();
                 document.getElementById('imposterHint').classList.remove('hidden');
-            } else { box.innerText = secret; }
+            }
+            // Unlock "Done" button after 1.5 seconds of holding
+            holdTimer = setTimeout(() => {
+                document.getElementById('doneWrapper').classList.add('done-btn-visible');
+            }, 1500);
         };
 
-        const hide = () => { document.getElementById('secretContainer').innerText = "LOCKED"; document.getElementById('imposterHint').classList.add('hidden'); };
+        const endHold = () => {
+            clearTimeout(holdTimer);
+            document.getElementById('secretContainer').innerText = "LOCKED";
+            document.getElementById('imposterHint').classList.add('hidden');
+        };
+
         const hb = document.getElementById('holdBtn');
-        hb.addEventListener('pointerdown', show); hb.addEventListener('pointerup', hide); hb.addEventListener('pointerleave', hide);
+        hb.addEventListener('pointerdown', startHold);
+        hb.addEventListener('pointerup', endHold);
+        hb.addEventListener('pointerleave', endHold);
         
         function finishReveal() {
             current++;
             if (current < players.length) {
                 updateUI();
             } else {
-                document.body.style.backgroundColor = "var(--bg)";
-                document.getElementById('card').style.borderColor = "var(--border)";
+                document.getElementById('card').style.background = "var(--surface)";
                 document.getElementById('reveal-role').classList.add('hidden');
                 document.getElementById('discuss').classList.remove('hidden');
             }
@@ -177,14 +185,8 @@
             document.getElementById('discuss').classList.add('hidden');
             document.getElementById('results').classList.remove('hidden');
             document.getElementById('finalWord').innerText = secret;
-            const imposterNamesDiv = document.getElementById('imposterNames');
-            imposterNamesDiv.innerHTML = '';
-            impIndices.forEach(idx => {
-                const nameSpan = document.createElement('span');
-                nameSpan.classList.add('imposter-reveal-name');
-                nameSpan.innerText = players[idx];
-                imposterNamesDiv.appendChild(nameSpan);
-            });
+            const resDiv = document.getElementById('imposterNames');
+            resDiv.innerHTML = impIndices.map(idx => `<span class="imposter-reveal-name">${players[idx]}</span>`).join('');
         }
 
         document.getElementById('nameInput').onkeypress = (e) => { if(e.key === 'Enter') addPlayer(); };
