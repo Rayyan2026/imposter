@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Imposter</title>
     <style>
         :root { 
@@ -11,7 +12,7 @@
         }
 
         /* CUSTOM SCROLLBAR */
-        * { scrollbar-width: thin; scrollbar-color: #30363d #0d1117; -webkit-tap-highlight-color: transparent; }
+        * { scrollbar-width: thin; scrollbar-color: #30363d #0d1117; -webkit-tap-highlight-color: transparent; outline: none !important; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0d1117; }
         ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
@@ -32,37 +33,33 @@
 
         h1 { color: var(--accent); margin: 0 0 1rem 0; font-size: 2.5rem; letter-spacing: -1.5px; }
 
-        /* INPUT AREA */
+        /* INPUT BAR */
         .input-row { position: relative; display: flex; gap: 8px; margin-bottom: 12px; }
         input { 
-            flex: 1; padding: 14px; border-radius: 12px; border: 1px solid var(--border); 
-            background: #0d1117; color: white; outline: none; font-size: 16px; 
+            flex: 1; padding: 14px 50px 14px 14px; border-radius: 12px; border: 1px solid var(--border); 
+            background: #0d1117; color: white; font-size: 16px; width: 100%;
         }
         .add-btn {
-            width: 48px; height: 48px; background: var(--accent); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; border: none;
-            cursor: pointer; flex-shrink: 0;
+            position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+            width: 38px; height: 38px; background: var(--accent); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; border: none; cursor: pointer;
         }
         .add-btn::after {
             content: ''; width: 8px; height: 8px; border-top: 3px solid white; 
             border-right: 3px solid white; transform: rotate(45deg); margin-right: 2px;
         }
 
-        .player-list { max-height: 140px; overflow-y: auto; margin-bottom: 15px; border-radius: 10px; }
-        .player-badge { background: #21262d; padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; margin-bottom: 6px; border: 1px solid var(--border); font-size: 0.95rem; }
+        .player-list { max-height: 140px; overflow-y: auto; margin-bottom: 15px; border-radius: 10px; text-align: left; }
+        .player-badge { background: #21262d; padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; margin-bottom: 6px; border: 1px solid var(--border); }
 
-        /* SETTINGS - Simple Stack for Mobile/Desktop */
         .setting-item { text-align: left; margin-bottom: 12px; }
         .setting-item label { display: block; font-size: 0.7rem; color: var(--dim); margin-bottom: 4px; font-weight: bold; text-transform: uppercase; }
-        select { 
-            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); 
-            background: #0d1117; color: white; outline: none; font-size: 16px; cursor: pointer;
-        }
+        select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: #0d1117; color: white; font-size: 16px; cursor: pointer; -webkit-appearance: none; appearance: none; }
 
         /* GAMEPLAY */
-        .hold-btn { width: 100%; height: 140px; border-radius: 20px; border: none; background: linear-gradient(145deg, #2ea043, #238636); color: white; font-size: 1.3rem; font-weight: 900; margin: 15px 0; cursor: pointer; }
+        .hold-btn { width: 100%; height: 140px; border-radius: 20px; border: none; background: linear-gradient(145deg, #2ea043, #238636); color: white; font-size: 1.3rem; font-weight: 900; margin: 15px 0; cursor: pointer; touch-action: none; }
         .secret-box { height: 90px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 900; background: rgba(0,0,0,0.4); border-radius: 18px; border: 2px dashed var(--border); margin-bottom: 15px; text-transform: uppercase; }
-        .hint-box { background: rgba(248, 81, 73, 0.12); border: 1px solid var(--danger); padding: 14px; border-radius: 14px; text-align: left; font-size: 0.85rem; color: #ffa198; line-height: 1.4; margin-bottom: 15px; }
+        .hint-box { background: rgba(248, 81, 73, 0.12); border: 1px solid var(--danger); padding: 14px; border-radius: 14px; text-align: left; font-size: 0.85rem; color: #ffa198; margin-bottom: 15px; }
 
         .action-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: #30363d; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; }
         .hidden { display: none; }
@@ -74,40 +71,21 @@
         <div id="setup">
             <h1>Imposter</h1>
             <div class="input-row">
-                <input type="text" id="nameInput" placeholder="Add Player Name" enterkeyhint="done" onkeypress="if(e=>e.key==='Enter')addPlayer()">
+                <input type="text" id="nameInput" placeholder="Add Player Name" enterkeyhint="done">
                 <button class="add-btn" onclick="addPlayer()"></button>
             </div>
             <div id="playerList" class="player-list"></div>
-            
-            <div class="setting-item">
-                <label>Category</label>
-                <select id="catSelect">
-                    <option value="all">Mixed Genres</option>
-                    <option value="animals">Animals</option>
-                    <option value="food">Food</option>
-                    <option value="movies">Movies</option>
-                </select>
-            </div>
-            
-            <div class="setting-item">
-                <label>Total Imposters</label>
-                <select id="impCount">
-                    <option value="1">1 Imposter</option>
-                    <option value="2">2 Imposters</option>
-                </select>
-            </div>
-
-            <button class="action-btn" onclick="initGame()" style="background:var(--accent); margin-top:5px;">START GAME</button>
+            <div class="setting-item"><label>Category</label><select id="catSelect"><option value="all">Mixed</option><option value="animals">Animals</option><option value="food">Food</option><option value="movies">Movies</option></select></div>
+            <div class="setting-item"><label>Imposters</label><select id="impCount"><option value="1">1 Imposter</option><option value="2">2 Imposters</option></select></div>
+            <button class="action-btn" onclick="initGame()" style="background:var(--accent);">START GAME</button>
         </div>
 
         <div id="reveal" class="hidden">
             <h2 id="playerLabel" style="color:var(--dim); margin-bottom: 5px;">Player</h2>
             <div id="secretContainer" class="secret-box">LOCKED</div>
             <button id="holdBtn" class="hold-btn">HOLD TO REVEAL</button>
-            <div id="imposterHint" class="hint-box hidden">
-                <strong style="color:var(--danger)">VAGUE HINT:</strong> <span id="smartClue">---</span>
-            </div>
-            <button class="action-btn" onclick="nextPlayer()">DONE</button>
+            <div id="imposterHint" class="hint-box hidden"><strong style="color:var(--danger)">VAGUE HINT:</strong> <span id="smartClue">---</span></div>
+            <button class="action-btn" onclick="finishReveal()">DONE</button>
         </div>
 
         <div id="discuss" class="hidden">
@@ -123,37 +101,26 @@
             food: { "Pizza": "Italian", "Apple": "Organic", "Pancake": "Breakfast", "Bacon": "Meat", "Hamburger": "Edible" },
             movies: { "Star Wars": "Fiction", "Toy Story": "Animation", "Titanic": "History", "Joker": "Drama", "Inception": "Mental" }
         };
-        
         let players = JSON.parse(localStorage.getItem('gameNames')) || [];
-        let impIndices = [];
-        let secret, current = 0;
+        let impIndices = [], secret, current = 0;
 
         function addPlayer() {
             const input = document.getElementById('nameInput');
-            const val = input.value.trim();
-            if (val && players.length < 20) {
-                players.push(val);
+            if (input.value.trim() && players.length < 20) {
+                players.push(input.value.trim());
                 localStorage.setItem('gameNames', JSON.stringify(players));
-                input.value = '';
-                render();
+                input.value = ''; render();
             }
         }
-
         function render() {
             document.getElementById('playerList').innerHTML = players.map((p, i) => `
                 <div class="player-badge"><span>${p}</span><span style="color:var(--danger); font-weight:bold; cursor:pointer;" onclick="removePlayer(${i})">✕</span></div>
             `).join('');
         }
-
-        function removePlayer(i) {
-            players.splice(i, 1);
-            localStorage.setItem('gameNames', JSON.stringify(players));
-            render();
-        }
-
+        function removePlayer(i) { players.splice(i, 1); localStorage.setItem('gameNames', JSON.stringify(players)); render(); }
         function initGame() {
             const countReq = parseInt(document.getElementById('impCount').value);
-            if (players.length < countReq + 1) return alert(`Need more players!`);
+            if (players.length < countReq + 1) return alert(`Add more players!`);
             impIndices = [];
             while(impIndices.length < countReq) {
                 let r = Math.floor(Math.random() * players.length);
@@ -168,15 +135,12 @@
             document.getElementById('reveal').classList.remove('hidden');
             updateUI();
         }
-
         function updateUI() {
             document.getElementById('playerLabel').innerText = players[current];
             document.getElementById('secretContainer').innerText = "LOCKED";
             document.getElementById('secretContainer').className = "secret-box";
             document.getElementById('imposterHint').classList.add('hidden');
         }
-
-        const btn = document.getElementById('holdBtn');
         const show = (e) => {
             e.preventDefault();
             const box = document.getElementById('secretContainer');
@@ -187,25 +151,20 @@
                 for (let c in library) if (library[c][secret]) clue = library[c][secret];
                 document.getElementById('smartClue').innerText = clue.toUpperCase();
                 document.getElementById('imposterHint').classList.remove('hidden');
-            } else {
-                box.innerText = secret;
-            }
+            } else { box.innerText = secret; }
         };
-        const hide = (e) => {
-            e.preventDefault();
+        const hide = () => {
             document.getElementById('secretContainer').innerText = "LOCKED";
             document.getElementById('imposterHint').classList.add('hidden');
         };
-
-        btn.addEventListener('pointerdown', show);
-        btn.addEventListener('pointerup', hide);
-        btn.addEventListener('pointerleave', hide);
-
-        function nextPlayer() {
+        const hb = document.getElementById('holdBtn');
+        hb.addEventListener('pointerdown', show); hb.addEventListener('pointerup', hide); hb.addEventListener('pointerleave', hide);
+        document.getElementById('nameInput').onkeypress = (e) => { if(e.key === 'Enter') addPlayer(); };
+        function finishReveal() {
             current++;
             if (current < players.length) updateUI();
             else {
-                document.getElementById('gameSummary').innerText = `Discuss! There are ${impIndices.length} Imposters.`;
+                document.getElementById('gameSummary').innerText = `Discussion Start! Find the ${impIndices.length} Imposter(s).`;
                 document.getElementById('reveal').classList.add('hidden');
                 document.getElementById('discuss').classList.remove('hidden');
             }
