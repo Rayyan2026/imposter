@@ -10,6 +10,7 @@
             --text: #e6edf3; --dim: #8b949e; --border: #21262d; 
             --card-default: #161b22;
         }
+        /* 1. UNIVERSAL BLUE REMOVAL */
         * { box-sizing: border-box; outline: none !important; -webkit-tap-highlight-color: transparent !important; user-select: none; }
         
         body { 
@@ -18,17 +19,16 @@
             touch-action: manipulation;
         }
 
-        /* CUSTOM ERROR TOAST */
-        #errorToast {
+        /* CUSTOM IN-PAGE ALERT */
+        #customAlert {
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
-            background: var(--danger); color: white; padding: 12px 24px; border-radius: 12px;
+            background: var(--danger); color: white; padding: 14px 24px; border-radius: 14px;
             font-weight: bold; display: flex; align-items: center; gap: 15px;
-            box-shadow: 0 4px 20px rgba(248, 81, 73, 0.4); z-index: 9999;
+            box-shadow: 0 10px 30px rgba(248, 81, 73, 0.4); z-index: 9999;
             transition: top 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
         }
-        #errorToast.show { top: 20px; }
-        .close-toast { cursor: pointer; font-size: 1.2rem; line-height: 1; opacity: 0.8; }
-        .close-toast:hover { opacity: 1; }
+        #customAlert.show { top: 20px; }
+        .close-alert { cursor: pointer; font-size: 1.5rem; line-height: 1; opacity: 0.8; }
 
         .app-card { 
             background: var(--card-default); width: 92%; max-width: 400px; padding: 1.8rem; 
@@ -38,7 +38,7 @@
 
         h1 { color: var(--accent); margin: 0 0 1rem 0; font-size: 2.2rem; letter-spacing: -1.5px; }
         .input-row { position: relative; display: flex; gap: 8px; margin-bottom: 12px; }
-        input { flex: 1; padding: 14px 50px 14px 14px; border-radius: 16px; border: 1px solid var(--border); background: #000; color: white; font-size: 16px; -webkit-user-select: text; user-select: text; }
+        input { flex: 1; padding: 14px 50px 14px 14px; border-radius: 16px; border: 1px solid var(--border); background: #000; color: white; font-size: 16px; width: 100%; -webkit-user-select: text; user-select: text; }
         
         .add-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; }
         .add-btn::after { content: ''; width: 8px; height: 8px; border-top: 3px solid white; border-right: 3px solid white; transform: rotate(45deg); margin-right: 2px; }
@@ -60,13 +60,14 @@
 </head>
 <body>
 
-    <!-- ERROR TOAST -->
-    <div id="errorToast">
-        <span>Duplicate name! Choose a unique name.</span>
-        <span class="close-toast" onclick="closeError()">×</span>
+    <!-- IN-PAGE ALERT BOX -->
+    <div id="customAlert">
+        <span id="alertMessage">Error Message</span>
+        <span class="close-alert" onclick="hideAlert()">×</span>
     </div>
 
     <div id="card" class="app-card">
+        <!-- SETUP -->
         <div id="setup">
             <h1>Imposter</h1>
             <div class="input-row"><input type="text" id="nameInput" placeholder="Add Player Name" enterkeyhint="done"><button class="add-btn" onclick="addPlayer()"></button></div>
@@ -76,6 +77,7 @@
             <button class="action-btn" onclick="initGame()" style="background:var(--accent);">START GAME</button>
         </div>
 
+        <!-- REVEAL -->
         <div id="reveal-role" class="hidden">
             <h2 id="playerLabel">Player</h2>
             <p id="subInstr" style="font-size: 0.8rem; color: var(--dim); margin-bottom: 10px;">Hold for 1.5s to see your word</p>
@@ -85,11 +87,13 @@
             <div id="doneWrapper"><button class="action-btn" onclick="finishReveal()">DONE (NEXT)</button></div>
         </div>
 
+        <!-- VOTE -->
         <div id="discuss" class="hidden">
             <h1 style="color:var(--danger)">VOTE</h1>
             <button class="action-btn" onclick="showResults()">REVEAL TRUTH</button>
         </div>
 
+        <!-- RESULTS -->
         <div id="results" class="hidden">
             <h1 style="color:var(--accent)">RESULTS</h1>
             <div id="finalWord" class="secret-box" style="margin-bottom:10px;">---</div>
@@ -106,15 +110,13 @@
         let players = JSON.parse(localStorage.getItem('gameNames')) || [];
         let impIndices = [], secret, current = 0, holdTimer;
 
-        // Custom Error Handling
-        function showError() {
-            const toast = document.getElementById('errorToast');
-            toast.classList.add('show');
-            setTimeout(closeError, 3000);
+        // Custom In-Page Alert System
+        function showAlert(msg) {
+            document.getElementById('alertMessage').innerText = msg;
+            document.getElementById('customAlert').classList.add('show');
+            setTimeout(hideAlert, 3000);
         }
-        function closeError() {
-            document.getElementById('errorToast').classList.remove('show');
-        }
+        function hideAlert() { document.getElementById('customAlert').classList.remove('show'); }
 
         function addPlayer() {
             const input = document.getElementById('nameInput');
@@ -122,7 +124,7 @@
             if (!name) return;
             // DUPLICATE GUARD
             if (players.some(p => p.toLowerCase() === name.toLowerCase())) {
-                showError();
+                showAlert("Duplicate name! Choose a unique name.");
                 return;
             }
             players.push(name);
@@ -135,7 +137,7 @@
 
         function initGame() {
             const countReq = parseInt(document.getElementById('impCount').value);
-            if (players.length < countReq + 1) return alert(`Need more players!`);
+            if (players.length < countReq + 1) return showAlert(`Need more players for ${countReq} imposters!`);
             impIndices = []; while(impIndices.length < countReq) { let r = Math.floor(Math.random() * players.length); if(!impIndices.includes(r)) impIndices.push(r); }
             const cat = document.getElementById('catSelect').value;
             let src = {}; if (cat === 'all') Object.values(library).forEach(c => Object.assign(src, c)); else src = library[cat];
