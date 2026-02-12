@@ -91,6 +91,7 @@
         <!-- DISCUSSION SCREEN -->
         <div id="discuss" class="hidden">
             <h1 style="color:var(--danger)">VOTE</h1>
+            <p style="color:var(--accent); font-weight:bold; margin-bottom: 8px;">Starts: <span id="starterName">---</span></p>
             <p style="color:var(--dim); margin-bottom: 20px;">Discuss and find the imposter!</p>
             <button class="action-btn" onclick="showResults()">REVEAL TRUTH</button>
         </div>
@@ -107,9 +108,9 @@
 
     <script>
         const library = {
-            objects: { "Hammer": ["Metal", "Tool", "Handheld"], "Pencil": ["Writing", "Wood", "Tool"], "Laptop": ["Electronic", "Screen", "Work"], "Compass": ["Direction", "Navigation", "Tool"], "Umbrella": ["Protection", "Weather", "Portable"], "Key": ["Metal", "Lock", "Pocket"], "Watch": ["Time", "Wrist", "Mechanical"], "Mirror": ["Glass", "Reflection", "Indoor"], "Scissors": ["Cutting", "Sharp", "Manual"], "Flashlight": ["Light", "Battery", "Outdoor"] },
-            nature: { "Cactus": ["Plant", "Desert", "Spiky"], "Shark": ["Water", "Ocean", "Predator"], "Mountain": ["High", "Stone", "Natural"], "Volcano": ["Fire", "Geology", "Dangerous"], "Sunflower": ["Yellow", "Plant", "Seed"], "Elephant": ["Gray", "Large", "Mammal"], "Spider": ["Legs", "Crawl", "Small"], "Waterfall": ["Water", "Flow", "Landscape"], "Bonsai": ["Tree", "Small", "Green"], "Lightning": ["Sky", "Energy", "Fast"] },
-            leisure: { "Pizza": ["Edible", "Italian", "Round"], "Guitar": ["Strings", "Music", "Acoustic"], "Chess": ["Game", "Strategy", "Wood"], "Popcorn": ["Cinema", "Corn", "Snack"], "Camera": ["Image", "Memory", "Lense"], "Bicycle": ["Transport", "Wheels", "Pedal"], "Coffee": ["Hot", "Drink", "Morning"], "Telescope": ["Space", "Lense", "View"], "Sushi": ["Japanese", "Rice", "Cold"], "Skateboard": ["Board", "Wheels", "Active"] }
+            objects: { "Hammer": ["Metal", "Tool", "Handheld"], "Pencil": ["Writing", "Wood", "Tool"], "Laptop": ["Electronic", "Screen", "Work"], "Compass": ["Direction", "Navigation", "Tool"], "Umbrella": ["Protection", "Weather", "Portable"], "Key": ["Metal", "Lock", "Pocket"], "Watch": ["Time", "Wrist", "Mechanical"], "Mirror": ["Glass", "Reflection", "Indoor"], "Scissors": ["Cutting", "Sharp", "Manual"], "Flashlight": ["Light", "Battery", "Outdoor"], "Magnet": ["Metal", "Force", "Attract"], "Suitcase": ["Travel", "Storage", "Handle"], "Headphones": ["Sound", "Ears", "Audio"], "Lightbulb": ["Glow", "Electric", "Bright"], "Telephone": ["Call", "Ring", "Dial"], "Toothbrush": ["Bristles", "Teeth", "Daily"], "Ladder": ["Climb", "Steps", "Wooden"], "Knife": ["Sharp", "Blade", "Cutting"], "Spoon": ["Utensil", "Scoop", "Metal"], "Fork": ["Prongs", "Utensil", "Dining"], "Plate": ["Flat", "Ceramic", "Dining"], "Cup": ["Handle", "Drinking", "Ceramic"], "Bottle": ["Glass", "Liquid", "Cork"], "Can": ["Metal", "Food", "Cylindrical"], "Box": ["Cardboard", "Storage", "Container"], "Bag": ["Fabric", "Carry", "Handle"], "Belt": ["Waist", "Leather", "Fastener"], "Button": ["Plastic", "Clothes", "Round"], "Zipper": ["Metal", "Sliding", "Clothes"], "Sock": ["Foot", "Fabric", "Pair"], "Hat": ["Head", "Fabric", "Wear"], "Glove": ["Hand", "Wool", "Pair"], "Shoe": ["Foot", "Lace", "Footwear"], "Wire": ["Metal", "Thin", "Conductive"], "Rope": ["Twisted", "Long", "Tie"], "Pen": ["Write", "Ink", "Clip"], "Eraser": ["Rubber", "Remove", "Pink"], "Ruler": ["Measure", "Straight", "Plastic"], "Stapler": ["Metal", "Office", "Click"], "Paperclip": ["Metal", "Office", "Curve"], "Desk": ["Furniture", "Work", "Flat"], "Chair": ["Furniture", "Sit", "Legs"], "Door": ["Entrance", "Wood", "Handle"], "Window": ["Glass", "View", "Frame"], "Lamp": ["Light", "Bulb", "Stand"] },
+            nature: { "Cactus": ["Plant", "Desert", "Spiky"], "Shark": ["Water", "Ocean", "Predator"], "Mountain": ["High", "Stone", "Natural"], "Volcano": ["Fire", "Geology", "Dangerous"], "Sunflower": ["Yellow", "Plant", "Seed"], "Elephant": ["Gray", "Large", "Mammal"], "Spider": ["Legs", "Crawl", "Small"], "Waterfall": ["Water", "Flow", "Landscape"], "Bonsai": ["Tree", "Small", "Green"], "Lightning": ["Sky", "Energy", "Fast"], "Tiger": ["Striped", "Orange", "Predator"], "Eagle": ["Wings", "Sky", "Predator"], "Whale": ["Ocean", "Giant", "Mammal"], "Snake": ["Slither", "Scales", "Forked"], "Frog": ["Jump", "Green", "Amphibian"], "Butterfly": ["Wings", "Flying", "Cocoon"], "Ant": ["Tiny", "Crawl", "Colony"], "Bee": ["Honey", "Wings", "Sting"], "Tree": ["Trunk", "Wood", "Leaves"], "Flower": ["Petals", "Bloom", "Colorful"], "Grass": ["Green", "Short", "Lawn"], "Rock": ["Stone", "Hard", "Solid"], "Sand": ["Beach", "Particles", "Desert"], "Snow": ["Cold", "White", "Frozen"], "Rain": ["Water", "Wet", "Cloudy"], "Wind": ["Air", "Breeze", "Blow"], "Cloud": ["Sky", "White", "Float"], "Rainbow": ["Colors", "Arc", "Rain"], "Ocean": ["Water", "Blue", "Large"], "River": ["Water", "Flow", "Stream"], "Penguin": ["Black", "Antarctica", "Swim"], "Dolphin": ["Smart", "Ocean", "Playful"], "Lion": ["Mane", "Roar", "King"], "Panda": ["Black", "Bamboo", "Gentle"], "Giraffe": ["Tall", "Spots", "Neck"], "Zebra": ["Stripes", "Africa", "Horse"], "Owl": ["Wise", "Nocturnal", "Eyes"], "Peacock": ["Colorful", "Feathers", "Show"], "Squirrel": ["Bushy", "Tail", "Nut"], "Deer": ["Antlers", "Grace", "Brown"], "Fox": ["Clever", "Red", "Tail"], "Bear": ["Brown", "Strong", "Furry"], "Crocodile": ["Reptile", "Teeth", "Green"] },
+            leisure: { "Pizza": ["Edible", "Italian", "Round"], "Guitar": ["Strings", "Music", "Acoustic"], "Chess": ["Game", "Strategy", "Board"], "Popcorn": ["Cinema", "Corn", "Snack"], "Camera": ["Image", "Memory", "Lens"], "Bicycle": ["Transport", "Wheels", "Pedal"], "Coffee": ["Hot", "Drink", "Morning"], "Telescope": ["Space", "Lens", "View"], "Sushi": ["Japanese", "Rice", "Cold"], "Skateboard": ["Board", "Wheels", "Active"], "Soccer": ["Ball", "Goal", "Sport"], "Basketball": ["Hoop", "Ball", "Court"], "Tennis": ["Racket", "Ball", "Court"], "Baseball": ["Diamond", "Glove", "Bat"], "Football": ["Oval", "Tackle", "Sport"], "Bowling": ["Pins", "Ball", "Roll"], "Volleyball": ["Net", "Ball", "Sand"], "Golf": ["Club", "Course", "Green"], "Swimming": ["Water", "Pool", "Sport"], "Dancing": ["Music", "Movement", "Joy"], "Movie": ["Screen", "Actor", "Watch"], "Television": ["Screen", "Remote", "Watch"], "Radio": ["Sound", "Dial", "Listen"], "Magazine": ["Pages", "Pictures", "Read"], "Newspaper": ["Paper", "News", "Read"], "Book": ["Pages", "Story", "Read"], "Novel": ["Fiction", "Pages", "Story"], "Painting": ["Canvas", "Art", "Brush"], "Drawing": ["Pencil", "Art", "Sketch"], "Singing": ["Voice", "Melody", "Music"], "Piano": ["Keys", "Music", "Instrument"], "Cooking": ["Kitchen", "Food", "Heat"], "Gardening": ["Plants", "Soil", "Nature"], "Hiking": ["Mountain", "Walking", "Trail"], "Camping": ["Tent", "Nature", "Outdoor"], "Fishing": ["Rod", "Water", "Catch"], "Surfing": ["Waves", "Board", "Water"], "Skiing": ["Snow", "Slope", "Sport"], "Yoga": ["Stretching", "Calm", "Balance"], "Meditation": ["Peace", "Mind", "Quiet"], "Photography": ["Camera", "Image", "Creative"] }
         };
 
         const cardColors = ["#1e293b", "#164e63", "#1e3a8a", "#4c1d95", "#701a75", "#5b21b6", "#1e40af", "#3730a3"];
@@ -221,12 +222,26 @@
         hb.addEventListener('pointerup', endHold);
         hb.addEventListener('pointerleave', endHold);
 
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && !document.getElementById('reveal-role').classList.contains('hidden')) {
+                e.preventDefault();
+                startHold(e);
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'Space') {
+                endHold();
+            }
+        });
+
         function finishReveal() {
             current++;
             if (current < players.length) {
                 updateUI();
             } else {
                 document.getElementById('card').style.backgroundColor = "var(--card-default)";
+                document.getElementById('starterName').innerText = players[Math.floor(Math.random() * players.length)];
                 document.getElementById('reveal-role').classList.add('hidden');
                 document.getElementById('discuss').classList.remove('hidden');
             }
