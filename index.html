@@ -45,6 +45,14 @@
         .action-btn { width: 100%; padding: 18px; border-radius: 16px; border: none; background: #30363d; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; }
         .hidden { display: none; }
         .imposter-text { color: var(--danger) !important; border-color: var(--danger) !important; }
+        .toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .toggle-label { font-size: 0.7rem; color: var(--dim); font-weight: bold; }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #30363d; transition: .4s; border-radius: 24px; border: 1px solid var(--border); }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--accent); border-color: var(--accent); }
+        input:checked + .slider:before { transform: translateX(20px); }
     </style>
 </head>
 <body>
@@ -68,12 +76,19 @@
                     <option value="leisure">Food & Hobbies</option>
                 </select>
             </div>
-            <div style="text-align:left; margin-bottom:20px;"><label style="font-size:0.7rem; color:var(--dim); font-weight:bold;">IMPOSTERS</label>
+            <div style="text-align:left; margin-bottom:10px;"><label style="font-size:0.7rem; color:var(--dim); font-weight:bold;">IMPOSTERS</label>
                 <select id="impCount" onchange="saveSettings()">
                     <option value="1">1 Imposter</option>
                     <option value="2">2 Imposters</option>
                     <option value="3">3 Imposters</option>
                 </select>
+            </div>
+            <div class="toggle-row">
+                <label class="toggle-label">HINTS</label>
+                <label class="switch">
+                    <input type="checkbox" id="hintToggle" onchange="saveSettings()" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
             <button class="action-btn" id="mainStartBtn" onclick="initGame()" style="background:var(--accent);">START GAME</button>
         </div>
@@ -120,14 +135,17 @@
         window.onload = () => {
             const lastCat = localStorage.getItem('lastCat');
             const lastImp = localStorage.getItem('lastImp');
+            const lastHint = localStorage.getItem('hintsEnabled');
             if(lastCat) document.getElementById('catSelect').value = lastCat;
             if(lastImp) document.getElementById('impCount').value = lastImp;
+            if(lastHint !== null) document.getElementById('hintToggle').checked = lastHint === 'true';
             render();
         };
 
         function saveSettings() {
             localStorage.setItem('lastCat', document.getElementById('catSelect').value);
             localStorage.setItem('lastImp', document.getElementById('impCount').value);
+            localStorage.setItem('hintsEnabled', document.getElementById('hintToggle').checked);
         }
 
         function showAlert(msg) {
@@ -205,8 +223,10 @@
             if (impIndices.includes(current)) {
                 box.innerText = "IMPOSTER";
                 box.classList.add('imposter-text');
-                document.getElementById('smartClue').innerText = currentHint.toUpperCase();
-                document.getElementById('imposterHint').classList.remove('hidden');
+                if (document.getElementById('hintToggle').checked) {
+                    document.getElementById('smartClue').innerText = currentHint.toUpperCase();
+                    document.getElementById('imposterHint').classList.remove('hidden');
+                }
             } else { box.innerText = secret; }
         };
 
